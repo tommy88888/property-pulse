@@ -23,7 +23,7 @@ const ImagePreview = ({ image, onRemove, images }: ImagePreviewProps) => {
           className='rounded-md shadow-md  '
         />
       )}
-      <Button
+      {/* <Button
         type='button'
         variant='ghost'
         size='icon'
@@ -31,7 +31,7 @@ const ImagePreview = ({ image, onRemove, images }: ImagePreviewProps) => {
         className='relative m-0 p-0 w-0 h-0'
       >
         <FaTimesCircle className='text-rose-500 absolute top-[1px] right-[4px]  rounded-full w-4 h-4 hover:text-rose-600 ' />
-      </Button>
+      </Button> */}
     </>
   );
 };

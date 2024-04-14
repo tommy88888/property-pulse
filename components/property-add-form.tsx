@@ -126,15 +126,19 @@ const PropertyAddForm = () => {
 
       if (!fields.images) return;
 
-      const MAX_FILES_COUNT = 2;
+      const MAX_FILES_COUNT = 4;
 
       if (files.length > MAX_FILES_COUNT) {
         alert(`You can only select up to ${MAX_FILES_COUNT} files.`);
+        clear();
         return;
       }
 
       const updatedImages: string[] = [...fields.images];
       const filesArray = Array.from(files);
+      console.log('🚀 ~ PropertyAddForm ~ filesArray:', filesArray.length);
+
+      if (filesArray.length > MAX_FILES_COUNT) clear();
       for (
         let i = 0;
         i < filesArray.length && updatedImages.length < MAX_FILES_COUNT;
@@ -152,7 +156,9 @@ const PropertyAddForm = () => {
             }));
           }
         };
+        reader.readAsDataURL(file);
       }
+
       // if (filesArray.length > MAX_FILES_COUNT) {
       //   return alert('images files can not more than 2 ');
       // } else {
@@ -181,6 +187,16 @@ const PropertyAddForm = () => {
     setFields((prev) => ({
       ...prev,
       images: filteredImages,
+    }));
+  };
+
+  const clear = () => {
+    if (imgRef.current) {
+      imgRef.current.value = '';
+    }
+    setFields((prev) => ({
+      ...prev,
+      images: [],
     }));
   };
 
@@ -502,6 +518,22 @@ const PropertyAddForm = () => {
             onChange={handleChange}
           />
           <span>{fields?.images?.length} file(s) selected </span>
+          <span
+            className={fields.images?.length === 0 ? 'hidden' : 'shadow-sm'}
+          >
+            <Button
+              disabled={fields?.images?.length === 0}
+              type='button'
+              variant='destructive'
+              size='sm'
+              onClick={clear}
+              className='text-xs h-3 p-2 m-0'
+            >
+              {fields.images && fields.images?.length > 1
+                ? 'clear images'
+                : 'clear image'}
+            </Button>
+          </span>
         </div>
 
         <div>

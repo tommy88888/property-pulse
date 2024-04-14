@@ -17,6 +17,8 @@ import Image from 'next/image';
 import { FaTimesCircle } from 'react-icons/fa';
 import { Button } from './ui/button';
 import { Property } from '@/type';
+import { clear } from 'console';
+import ImagePreview from './form/image-preview';
 // import Property from '@/models/Property';
 
 type ParamsProps = {
@@ -98,8 +100,6 @@ const PropertyEditForm = () => {
       e.target instanceof HTMLInputElement &&
       (e.target.type === 'text' || e.target.type === 'email')
     ) {
-      console.log('Input value:', (e.target as HTMLInputElement).value);
-
       if (name.includes('.')) {
         const [outerKey, innerKey] = name.split('.');
         setFields((prev: any) => ({
@@ -213,6 +213,16 @@ const PropertyEditForm = () => {
       console.log(err);
       toast.error('Something went wrong!');
     }
+  };
+
+  const clear = () => {
+    if (imgRef.current) {
+      imgRef.current.value = '';
+    }
+    setFields((prev) => ({
+      ...prev,
+      images: [],
+    }));
   };
 
   if (loading) return <LoadingPage loading={loading} />;
@@ -494,26 +504,34 @@ const PropertyEditForm = () => {
             {!fields?.images ? (
               <p>No Image!</p>
             ) : (
-              fields.images &&
-              fields.images.map((img, i) => (
-                <Fragment key={i}>
-                  <Image
-                    src={img}
-                    alt='image prev'
-                    width={80}
-                    height={80}
-                    className='rounded-md shadow-md  '
-                  />
-                  <Button
-                    type='button'
-                    variant='ghost'
-                    size='icon'
-                    onClick={() => removeImagePrev(img)}
-                    className='relative m-0 p-0 w-0 h-0 '
-                  >
-                    <FaTimesCircle className='text-rose-500 absolute top-[1px] right-[4px]  rounded-full w-4 h-4 hover:text-rose-600 ' />
-                  </Button>
-                </Fragment>
+              // fields.images &&
+              // fields.images.map((img, i) => (
+              //   <Fragment key={i}>
+              //     <Image
+              //       src={img}
+              //       alt='image prev'
+              //       width={80}
+              //       height={80}
+              //       className='rounded-md shadow-md  '
+              //     />
+              //     <Button
+              //       type='button'
+              //       variant='ghost'
+              //       size='icon'
+              //       onClick={() => removeImagePrev(img)}
+              //       className='relative m-0 p-0 w-0 h-0 '
+              //     >
+              //       <FaTimesCircle className='text-rose-500 absolute top-[1px] right-[4px]  rounded-full w-4 h-4 hover:text-rose-600 ' />
+              //     </Button>
+              //   </Fragment>
+              // ))
+              fields.images?.map((img, i) => (
+                <ImagePreview
+                  key={i}
+                  images={fields.images || []}
+                  image={img}
+                  onRemove={() => removeImagePrev(img)}
+                />
               ))
             )}
           </div>
@@ -528,6 +546,22 @@ const PropertyEditForm = () => {
             onChange={handleChange}
           />
           <span>{filesCount} file(s) selected </span>
+          <span
+            className={fields.images?.length === 0 ? 'hidden' : 'shadow-sm'}
+          >
+            <Button
+              disabled={fields?.images?.length === 0}
+              type='button'
+              variant='destructive'
+              size='sm'
+              onClick={clear}
+              className='text-xs h-3 p-2 m-0'
+            >
+              {fields.images && fields.images?.length > 1
+                ? 'clear images'
+                : 'clear image'}
+            </Button>
+          </span>
         </div>
         {/* <ImagePicker
         label='image picker'
