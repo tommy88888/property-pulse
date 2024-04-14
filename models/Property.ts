@@ -1,4 +1,4 @@
-import { Rates, SellerInfo, Location } from '@/type';
+import { Rates, SellerInfo, Location, OptionsType } from '@/type';
 import { Schema, model, models, Document, Types } from 'mongoose';
 
 interface Owner {

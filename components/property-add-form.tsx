@@ -1,18 +1,24 @@
 'use client';
 
 import { AmenitiesList, initialProperty, PropertyTypes } from '@/lib/helper';
-import { ImageType, Property } from '@/type';
-import { Fragment, useEffect, useRef, useState } from 'react';
-import { FaTimesCircle } from 'react-icons/fa';
+import { Property } from '@/type';
+import { useEffect, useRef, useState } from 'react';
+
 import { Button } from './ui/button';
-import Image from 'next/image';
+
 import ImagePreview from './form/image-preview';
+import Seller from './form/seller';
+import Location from './form/location';
+import BedBathSqFeet from './form/bed-bath-sq-feet';
+import Type from './form/type';
+import InputText from './form/input';
+import { toast } from 'react-toastify';
+
+// import SelectPropertyType from './form/select-property-type';
 
 const PropertyAddForm = () => {
   const [mounted, setMounted] = useState(false);
   const [fields, setFields] = useState<Property>(initialProperty);
-  // const [filesUp, setFilesUp] = useState<any>([]);
-  const { images } = fields;
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -26,18 +32,7 @@ const PropertyAddForm = () => {
     const { name, value } = e.target;
 
     if (e.target instanceof HTMLInputElement && e.target.type === 'checkbox') {
-      // console.log('Checkbox value:', (e.target as HTMLInputElement).checked);
-      // console.log('Checkbox value:', e);
       const { value, checked } = e.target;
-
-      // as {
-      //   value: string;
-      //   checked: boolean;
-      // };
-
-      // let fields = {
-      //   amenities: [] as string[],
-      // };
 
       if (!value) {
         return undefined;
@@ -57,21 +52,12 @@ const PropertyAddForm = () => {
         ...prev,
         amenities: updatedAmen,
       }));
-      // setFields((prev) => ({
-      //   ...prev,
-      //   amenities: checked
-      //     ? [...prev.amenities, value]
-      //     : prev.amenities.filter((amenity) => amenity !== value),
-      // }));
     } else if (e.target instanceof HTMLSelectElement) {
-      // console.log('Selected value:', (e.target as HTMLSelectElement).value);
       setFields((prev) => ({ ...prev, [name]: value }));
     } else if (
       e.target instanceof HTMLInputElement &&
       (e.target.type === 'text' || e.target.type === 'email')
     ) {
-      // console.log('Input value:', (e.target as HTMLInputElement).value);
-
       if (name.includes('.')) {
         const [outerKey, innerKey] = name.split('.');
         setFields((prev: any) => ({
@@ -91,7 +77,6 @@ const PropertyAddForm = () => {
       e.target instanceof HTMLTextAreaElement &&
       e.target.type === 'textarea'
     ) {
-      // console.log('TextArea value:', (e.target as HTMLTextAreaElement).value);
       setFields((prev) => ({
         ...prev,
         [name]: value,
@@ -100,7 +85,6 @@ const PropertyAddForm = () => {
       e.target instanceof HTMLInputElement &&
       (e.target.type === 'number' || e.target.type === 'tel')
     ) {
-      // console.log('Input Number rates:', (e.target as HTMLInputElement).value);
       if (name.includes('.')) {
         const [outerKey, innerKey] = name.split('.');
         setFields((prev: any) => ({
@@ -120,7 +104,6 @@ const PropertyAddForm = () => {
       e.target instanceof HTMLInputElement &&
       e.target.type === 'file'
     ) {
-      // console.log('Input File:', (e.target as HTMLInputElement).value);
       const { files } = e.target;
       if (!files || !files.length) return;
 
@@ -129,15 +112,13 @@ const PropertyAddForm = () => {
       const MAX_FILES_COUNT = 4;
 
       if (files.length > MAX_FILES_COUNT) {
-        alert(`You can only select up to ${MAX_FILES_COUNT} files.`);
+        toast.error(`You can only select up to ${MAX_FILES_COUNT} files.`);
         clear();
         return;
       }
 
       const updatedImages: string[] = [...fields.images];
       const filesArray = Array.from(files);
-      console.log('🚀 ~ PropertyAddForm ~ filesArray:', filesArray.length);
-
       if (filesArray.length > MAX_FILES_COUNT) clear();
       for (
         let i = 0;
@@ -158,28 +139,9 @@ const PropertyAddForm = () => {
         };
         reader.readAsDataURL(file);
       }
-
-      // if (filesArray.length > MAX_FILES_COUNT) {
-      //   return alert('images files can not more than 2 ');
-      // } else {
-      //   for (const file of filesArray) {
-      //     const reader = new FileReader();
-      //     reader.onload = (e) => {
-      //       if (e.target && e.target.result) {
-      //         const imageURL = e.target.result as string;
-      //         updatedImages.push(imageURL);
-      //       }
-      //       // setImages((prevState) => [...prevState, { file, previewURL, publicId: null }]);
-      //       setFields((prev) => ({
-      //         ...prev,
-      //         images: updatedImages,
-      //       }));
-      //     };
-      //     reader.readAsDataURL(file);
-      //   }
-      // }
     }
   };
+
   const removeImagePrev = (img: string) => {
     if (!fields.images) throw new Error('error');
 
@@ -210,151 +172,40 @@ const PropertyAddForm = () => {
         <h2 className='text-3xl text-center font-semibold mb-6'>
           Add Property
         </h2>
-        <div className='mb-4'>
-          <label htmlFor='type' className='block text-gray-700 font-bold mb-2'>
-            Property Type
-          </label>
-          <select
-            id='type'
-            name='type'
-            className='border rounded w-full py-2 px-3'
-            required
-            defaultValue={fields.type}
-            onChange={handleChange}
-          >
-            {PropertyTypes.map((type, i) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className='mb-4'>
-          <label className='block text-gray-700 font-bold mb-2'>
-            Listing Name
-          </label>
-          <input
-            type='text'
-            id='name'
-            name='name'
-            className='border rounded w-full py-2 px-3 mb-2'
-            placeholder='eg. Beautiful Apartment In Miami'
-            required
-            defaultValue={fields.name}
-            onChange={handleChange}
-          />
-        </div>
-        <div className='mb-4'>
-          <label
-            htmlFor='description'
-            className='block text-gray-700 font-bold mb-2'
-          >
-            Description
-          </label>
-          <textarea
-            id='description'
-            name='description'
-            className='border rounded w-full py-2 px-3'
-            rows={4}
-            placeholder='Add an optional description of your property'
-            defaultValue={fields.description}
-            onChange={handleChange}
-          />
-        </div>
-        <div className='mb-4 bg-blue-50 p-4'>
-          <label className='block text-gray-700 font-bold mb-2'>Location</label>
-          <input
-            type='text'
-            id='street'
-            name='location.street'
-            className='border rounded w-full py-2 px-3 mb-2'
-            placeholder='Street'
-            defaultValue={fields.location.street}
-            onChange={handleChange}
-          />
-          <input
-            type='text'
-            id='city'
-            name='location.city'
-            className='border rounded w-full py-2 px-3 mb-2'
-            placeholder='City'
-            required
-            defaultValue={fields.location.city}
-            onChange={handleChange}
-          />
-          <input
-            type='text'
-            id='state'
-            name='location.state'
-            className='border rounded w-full py-2 px-3 mb-2'
-            placeholder='State'
-            required
-            defaultValue={fields.location.state}
-            onChange={handleChange}
-          />
-          <input
-            type='text'
-            id='zipcode'
-            name='location.zipcode'
-            className='border rounded w-full py-2 px-3 mb-2'
-            placeholder='Zipcode'
-            defaultValue={fields.location.zipcode}
-            onChange={handleChange}
-          />
-        </div>
-        <div className='mb-4 flex flex-wrap'>
-          <div className='w-full sm:w-1/3 pr-2'>
-            <label
-              htmlFor='beds'
-              className='block text-gray-700 font-bold mb-2'
-            >
-              Beds
-            </label>
-            <input
-              type='number'
-              id='beds'
-              name='beds'
-              className='border rounded w-full py-2 px-3'
-              required
-              defaultValue={fields.beds}
-              onChange={handleChange}
-            />
-          </div>
-          <div className='w-full sm:w-1/3 px-2'>
-            <label
-              htmlFor='baths'
-              className='block text-gray-700 font-bold mb-2'
-            >
-              Baths
-            </label>
-            <input
-              type='number'
-              id='baths'
-              name='baths'
-              className='border rounded w-full py-2 px-3'
-              required
-              defaultValue={fields.baths}
-              onChange={handleChange}
-            />
-          </div>
-          <div className='w-full sm:w-1/3 pl-2'>
-            <label
-              htmlFor='square_feet'
-              className='block text-gray-700 font-bold mb-2'
-            >
-              Square Feet
-            </label>
-            <input
-              type='number'
-              id='square_feet'
-              name='square_feet'
-              className='border rounded w-full py-2 px-3'
-              required
-              defaultValue={fields.square_feet}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
+
+        <Type type={fields.type} handleChange={handleChange} />
+
+        <InputText
+          label='Listing Name'
+          name='name'
+          type='text'
+          id='name'
+          defaultValue={fields.name}
+          placeholder='eg. Beautiful Apartment In Miami'
+          className='border rounded w-full py-2 px-3 mb-2'
+          handleChange={handleChange}
+        />
+
+        <InputText
+          label='Description'
+          name='description'
+          type='textarea'
+          id='description'
+          rows={4}
+          defaultValue={fields.description}
+          placeholder='Add an optional description of your property'
+          className='border rounded w-full py-2 px-3 mb-2'
+          handleChange={handleChange}
+        />
+        <Location location={fields.location} handleChange={handleChange} />
+
+        <BedBathSqFeet
+          beds={fields.beds}
+          baths={fields.baths}
+          square_feet={fields.square_feet}
+          handleChange={handleChange}
+        />
+
         <div className='mb-4'>
           <label className='block text-gray-700 font-bold mb-2'>
             Amenities
@@ -413,58 +264,9 @@ const PropertyAddForm = () => {
             ))}
           </div>
         </div>
-        <div className='mb-4'>
-          <label
-            htmlFor='seller_name'
-            className='block text-gray-700 font-bold mb-2'
-          >
-            Seller Name
-          </label>
-          <input
-            type='text'
-            id='seller_name'
-            name='seller_info.name'
-            className='border rounded w-full py-2 px-3'
-            placeholder='Name'
-            defaultValue={fields.seller_info.name}
-            onChange={handleChange}
-          />
-        </div>
-        <div className='mb-4'>
-          <label
-            htmlFor='seller_email'
-            className='block text-gray-700 font-bold mb-2'
-          >
-            Seller Email
-          </label>
-          <input
-            type='email'
-            id='seller_email'
-            name='seller_info.email'
-            className='border rounded w-full py-2 px-3'
-            placeholder='Email address'
-            required
-            defaultValue={fields.seller_info.email}
-            onChange={handleChange}
-          />
-        </div>
-        <div className='mb-4'>
-          <label
-            htmlFor='seller_phone'
-            className='block text-gray-700 font-bold mb-2'
-          >
-            Seller Phone
-          </label>
-          <input
-            type='tel'
-            id='seller_phone'
-            name='seller_info.phone'
-            className='border rounded w-full py-2 px-3'
-            placeholder='Phone'
-            defaultValue={fields.seller_info.phone}
-            onChange={handleChange}
-          />
-        </div>
+
+        <Seller seller_info={fields.seller_info} handleChange={handleChange} />
+
         <div className='mb-4'>
           <label
             htmlFor='images'
@@ -473,30 +275,6 @@ const PropertyAddForm = () => {
             Images (Select up to 4 images)
           </label>
           <div className='w-18 h-18 flex flex-wrap  gap-1 rounded-md shadow-md  '>
-            {/* {!fields.images && <p>No Image!</p>}
-          {fields.images &&
-            fields.images.map((img, i) => (
-              <Fragment key={img}>
-                <Image
-                  src={img}
-                  alt='image prev'
-                  width={80}
-                  height={80}
-                  className='rounded-md shadow-md  '
-                />
-
-                <Button
-                  type='button'
-                  variant='ghost'
-                  size='icon'
-                  onClick={() => removeImagePrev(i)}
-                  className='relative m-0 p-0 w-0 h-0'
-                >
-                  <FaTimesCircle className='text-rose-500 absolute top-[1px] right-[4px]  rounded-full w-4 h-4 hover:text-rose-600 ' />
-                </Button>
-              </Fragment>
-            ))} */}
-
             {!fields.images && <p>No Image!</p>}
             {fields.images?.map((img, i) => (
               <ImagePreview

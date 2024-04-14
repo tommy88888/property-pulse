@@ -21,6 +21,7 @@ const SearchResultsPage = () => {
   const location = searchParams.get('location');
   const propertyType = searchParams.get('propertyType');
 
+  console.log('🚀 ~ SearchResultsPage ~ properties:', properties);
   useEffect(() => {
     const fetchSearchResult = async () => {
       try {

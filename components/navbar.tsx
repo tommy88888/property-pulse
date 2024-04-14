@@ -186,37 +186,67 @@ const Navbar = () => {
                     tabIndex={-1}
                     onClick={() => setIsProfileMenuOpen(false)}
                   >
-                    <Link
-                      href='/profile'
-                      className='block px-4 py-2 text-sm text-gray-700'
-                      role='menuitem'
-                      tabIndex={0}
-                      id='user-menu-item-0'
-                    >
-                      Your Profile
-                    </Link>
-                    <Link
-                      href='/properties/saved'
-                      className='block px-4 py-2 text-sm text-gray-700'
-                      role='menuitem'
-                      tabIndex={-1}
-                      id='user-menu-item-2'
-                    >
-                      Saved Properties
-                    </Link>
                     <Button
-                      onClick={() => {
-                        setIsProfileMenuOpen(false);
-                        signOut();
-                      }}
+                      asChild
                       className='block px-4 py-2 text-sm text-gray-700'
                       size='sm'
                       variant='ghost'
                       role='menuitem'
                       tabIndex={-1}
-                      id='user-menu-item-2'
+                      id='user-menu-item-1'
                     >
-                      Sign Out
+                      <Link
+                        href='/profile'
+                        className='block px-4 py-2 text-sm text-gray-700'
+                        role='menuitem'
+                        tabIndex={0}
+                        id='user-menu-item-0'
+                      >
+                        Your Profile
+                      </Link>
+                    </Button>
+                    <Button
+                      asChild
+                      className='block px-4 py-2 text-sm text-gray-700'
+                      size='sm'
+                      variant='ghost'
+                      role='menuitem'
+                      tabIndex={-1}
+                      id='user-menu-item-3'
+                    >
+                      <Link
+                        href='/properties/saved'
+                        className='block px-4 py-2 text-sm text-gray-700'
+                        role='menuitem'
+                        tabIndex={-1}
+                        id='user-menu-item-4'
+                      >
+                        Saved Properties
+                      </Link>
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setIsProfileMenuOpen(false);
+                        signOut();
+                      }}
+                      asChild
+                      type='button'
+                      className='block px-4 py-2 text-sm text-gray-700'
+                      size='sm'
+                      variant='ghost'
+                      role='menuitem'
+                      tabIndex={-1}
+                      id='user-menu-item-5'
+                    >
+                      <Link
+                        href='/'
+                        className='block px-4 py-2 text-sm text-gray-700'
+                        role='menuitem'
+                        tabIndex={-1}
+                        id='user-menu-item-6'
+                      >
+                        Sign out
+                      </Link>
                     </Button>
                   </div>
                 )}
@@ -231,40 +261,6 @@ const Navbar = () => {
         <div className='hidden md:flex h-full w-56 flex-col fixed inset-y-0 z-50 '>
           <Sidebar />
 
-          {/* <div className='' id='mobile-menu'>
-            <div className='space-y-1 px-2 pb-3 pt-2'>
-              <Link
-                href='/'
-                className={cn(
-                  'text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium',
-                  pathname === '/' && 'bg-black'
-                )}
-              >
-                Home
-              </Link>
-              <Link
-                href='/properties'
-                className={cn(
-                  'text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium',
-                  pathname === '/properties' && 'bg-black'
-                )}
-              >
-                Properties
-              </Link>
-
-              {isLoggedIn && (
-                <Link
-                  href='/properties/add'
-                  className={cn(
-                    'text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium',
-                    pathname === '/properties/add' && 'bg-black'
-                  )}
-                >
-                  Add Property
-                </Link>
-              )}
-            </div>
-          </div> */}
           {!session &&
             providers &&
             Object.values(providers).map((provider: any, i) => (

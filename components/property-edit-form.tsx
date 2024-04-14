@@ -12,14 +12,11 @@ import {
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect, Fragment, useRef } from 'react';
 import { toast } from 'react-toastify';
-import ImagePicker from './form/image-picker';
-import Image from 'next/image';
-import { FaTimesCircle } from 'react-icons/fa';
+
 import { Button } from './ui/button';
 import { Property } from '@/type';
-import { clear } from 'console';
+
 import ImagePreview from './form/image-preview';
-// import Property from '@/models/Property';
 
 type ParamsProps = {
   id: string;
@@ -128,7 +125,6 @@ const PropertyEditForm = () => {
       e.target instanceof HTMLInputElement &&
       (e.target.type === 'number' || e.target.type === 'tel')
     ) {
-      console.log('Input Number rates:', (e.target as HTMLInputElement).value);
       if (name.includes('.')) {
         const [outerKey, innerKey] = name.split('.');
         setFields((prev: any) => ({

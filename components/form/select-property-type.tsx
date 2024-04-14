@@ -5,13 +5,17 @@ import { OptionsType } from '@/type';
 
 type SelectPropertyTypeProps = {
   type: OptionsType | 'All';
-  setPropertyType: (selectedType: OptionsType) => void;
+  setPropertyType: (type: OptionsType) => void;
 };
 
 const SelectPropertyType = ({
   type,
   setPropertyType,
 }: SelectPropertyTypeProps) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = e.target.value as OptionsType;
+    setPropertyType(selectedValue);
+  };
   return (
     <div className='w-full md:w-2/5 md:pl-2'>
       <label htmlFor='property-type' className='sr-only'>
@@ -19,9 +23,7 @@ const SelectPropertyType = ({
       </label>
       <select
         id='property-type'
-        onChange={(
-          e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-        ) => setPropertyType(e.target.value as OptionsType)}
+        onChange={handleChange}
         className='w-full px-4 py-3 rounded-lg bg-white text-gray-800 focus:outline-none focus:ring focus:ring-blue-500'
       >
         {PropertyOptions.map((opt, i) => (

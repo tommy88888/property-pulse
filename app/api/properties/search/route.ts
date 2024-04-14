@@ -1,5 +1,6 @@
 import { connectDB } from '@/config/db';
 import Property from '@/models/Property';
+import User from '@/models/User';
 import { Query } from '@/type';
 
 export const dynamic = 'force-dynamic';
@@ -30,7 +31,10 @@ export const GET = async (req: Request) => {
       query.type = typePattern;
     }
 
-    const properties = await Property.find(query);
+    const properties = await Property.find(query).populate<{ owner: User }>(
+      'owner',
+      'username'
+    );
 
     return new Response(JSON.stringify(properties), {
       status: 200,

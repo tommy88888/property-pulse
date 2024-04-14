@@ -20,7 +20,8 @@ const ImagePreview = ({ image, onRemove, images }: ImagePreviewProps) => {
           alt='image'
           width={80}
           height={80}
-          className='rounded-md shadow-md  '
+          priority
+          className='rounded-md shadow-md w-auto'
         />
       )}
       {/* <Button

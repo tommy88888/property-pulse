@@ -11,6 +11,20 @@ export type Rates = {
   monthly: number | string;
 };
 
+export type TypeProps = {
+  All: string;
+  Apartment: string;
+  Condo: string;
+  House: string;
+  Cabin_or_Cottage: string;
+  Room: string;
+  Studio: string;
+  Capsule: string;
+  Villa: string;
+  Mansion: string;
+  Other: string;
+};
+
 export type SellerInfo = {
   name: string;
   email: string;

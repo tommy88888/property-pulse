@@ -13,15 +13,16 @@ export const {
     async signIn({ profile, user, account }) {
       await connectDB();
 
-      if (!profile) throw new Error('No Profile Found!');
-      const userExists = await User.findOne({ email: profile.email });
-      if (!userExists && account?.provider !== 'credentials') {
-        // const username = profile.name.slice(0, 20);
+      // if (!profile) throw new Error('No Profile Found!');
+      const userExists = await User.findOne({ email: profile?.email });
+      // if (!userExists && account?.provider !== 'credentials') {
+      if (!userExists) {
+        // const username = profile?.name.slice(0, 20);
 
         await User.create({
-          email: profile.email,
-          username: profile.name,
-          image: profile.picture,
+          email: profile?.email,
+          username: profile?.name,
+          image: profile?.picture,
         });
       }
       return true;
